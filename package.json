@@ -17,6 +17,12 @@
         "resources": {
             "media": [
                 {
+                    "file": "images/smiley",
+                    "name": "MUSTACHE_ID",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                },
+                {
                     "file": "images/asl_resized_mono.png",
                     "name": "SPARK_ICON",
                     "type": "png"

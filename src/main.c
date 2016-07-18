@@ -2,9 +2,12 @@
 
 static Window *s_main_window;
 static TextLayer *s_time_layer;  
+static TextLayer *s_word_layer;
 static GFont s_time_font;
 static BitmapLayer *s_background_layer;
+static BitmapLayer *s_smiley_layer;
 static GBitmap *s_background_bitmap;
+static GBitmap *s_smiley_bitmap;
 
 
 static void update_time() {
@@ -16,7 +19,7 @@ static void update_time() {
   static char buffer[] = "00:00";
 
   // format the way that the time text is going to be displayed
-strftime(buffer, sizeof("00:00"),"%H*%M", tick_time);
+strftime(buffer, sizeof("00:00"),"%I*%M", tick_time);
 
 
   // Display this time on the TextLayer
@@ -27,25 +30,38 @@ strftime(buffer, sizeof("00:00"),"%H*%M", tick_time);
 static void main_window_load(Window *window) {
   // Create GBitmap, then set to created BitmapLayer
   s_background_bitmap = gbitmap_create_with_resource(RESOURCE_ID_SPARK_ICON);
+	s_smiley_bitmap = gbitmap_create_with_resource(RESOURCE_ID_MUSTACHE_ID);
   s_background_layer = bitmap_layer_create(GRect(0, 0, 144, 180));
+	s_smiley_layer = bitmap_layer_create(GRect(0,0,144,180));
   bitmap_layer_set_bitmap(s_background_layer, s_background_bitmap);
+	bitmap_layer_set_bitmap(s_smiley_layer, s_smiley_bitmap);
   layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(s_background_layer));
+	layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(s_smiley_layer));
   
   // Create time TextLayer
   s_time_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_ATE_BIT_24));
 
   //time layer
-  s_time_layer = text_layer_create(GRect(15, 141, 120, 40));
+  s_time_layer = text_layer_create(GRect(15, 90, 120, 40));
   text_layer_set_background_color(s_time_layer, GColorClear);
-  text_layer_set_text_color(s_time_layer, GColorBlack);
+  text_layer_set_text_color(s_time_layer, GColorImperialPurple);
   text_layer_set_text(s_time_layer, "00:00");
+	
+	//word layer
+	s_word_layer = text_layer_create(GRect(15, 141, 120, 40));
+	text_layer_set_background_color(s_word_layer, GColorCyan);
+	text_layer_set_text_color(s_word_layer, GColorImperialPurple);
+	text_layer_set_text(s_word_layer, "Yolo");
 
   // Improve the layout to be more like a watchface
   text_layer_set_font(s_time_layer, s_time_font);
+	text_layer_set_font(s_word_layer, s_time_font);
   text_layer_set_text_alignment(s_time_layer, GTextAlignmentCenter);
+	text_layer_set_text_alignment(s_word_layer, GTextAlignmentCenter);
 
   // Add it as a child layer to the Window's root layer
   layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_time_layer));
+	layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_word_layer));
 }
 
 static void main_window_unload(Window *window) {
@@ -54,6 +70,7 @@ static void main_window_unload(Window *window) {
     fonts_unload_custom_font(s_time_font);
     // Destroy time layer
     text_layer_destroy(s_time_layer);
+		text_layer_destroy(s_word_layer);
     
 }
 
